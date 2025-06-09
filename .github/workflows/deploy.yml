@@ -1,0 +1,45 @@
+name: Build and Deploy MLflow Server
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  IMAGE_NAME: mlflow-server
+  PORT: 8080
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+    - name: Build Docker image
+      run: docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
+
+    - name: Push Docker image
+      run: |
+        docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+        docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+
+    # Ajoutez ici les étapes pour déployer sur votre cloud (AWS, GCP, Azure, etc.)
+    # Par exemple pour AWS ECS:
+    # - name: Deploy to AWS ECS
+    #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+    #   with:
+    #     task-definition: task-definition.json
+    #     service: mlflow-service
+    #     cluster: mlflow-cluster
+    #     wait-for-service-stability: true
