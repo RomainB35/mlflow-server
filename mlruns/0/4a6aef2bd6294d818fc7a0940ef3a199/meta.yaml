@@ -1,0 +1,15 @@
+artifact_uri: file:///home/romain/work/projet7/notebooks/pipeline/mlflow-server/mlruns/0/4a6aef2bd6294d818fc7a0940ef3a199/artifacts
+end_time: 1749506236263
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 4a6aef2bd6294d818fc7a0940ef3a199
+run_name: languid-pug-87
+run_uuid: 4a6aef2bd6294d818fc7a0940ef3a199
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1749506236255
+status: 3
+tags: []
+user_id: romain

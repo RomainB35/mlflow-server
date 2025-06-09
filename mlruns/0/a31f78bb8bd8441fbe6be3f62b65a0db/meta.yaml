@@ -1,0 +1,15 @@
+artifact_uri: file:///home/romain/work/projet7/notebooks/pipeline/mlflow-server/mlruns/0/a31f78bb8bd8441fbe6be3f62b65a0db/artifacts
+end_time: 1749506226612
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: a31f78bb8bd8441fbe6be3f62b65a0db
+run_name: illustrious-pig-416
+run_uuid: a31f78bb8bd8441fbe6be3f62b65a0db
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1749506226604
+status: 3
+tags: []
+user_id: romain
