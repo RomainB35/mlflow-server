@@ -37,16 +37,6 @@ jobs:
       - name: Run unit and API tests
         run: |
           pytest tests/ -v
-          curl -sSf http://localhost:8080 || echo "MLflow container may not expose a root endpoint"
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results
-          path: |
-            test-reports/
-            .pytest_cache/
 
   build-and-deploy:
     needs: test
@@ -91,5 +81,5 @@ jobs:
     steps:
       - name: Test health of deployed Docker image
         run: |
-          curl -sSf http://localhost:8080 || echo "MLflow container may not expose a root endpoint"
+          pytest tests/ -v
 
