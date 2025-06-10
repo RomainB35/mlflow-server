@@ -73,7 +73,7 @@ jobs:
 
     services:
       mlflow:
-        image: docker.io/romainb35/mlflow-server:latest
+        image: docker.io/romainb35/mlflow-server:v0
         ports:
           - 8080:8080
 
