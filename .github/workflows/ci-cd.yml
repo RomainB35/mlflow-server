@@ -33,10 +33,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install mlflow pytest requests
           pip install -r requirements-test.txt
-
       - name: Run unit and API tests
-        env:
-          MLFLOW_TRACKING_URI: http://mlflow:8080
         run: |
           pytest tests/ -v
 
@@ -88,27 +85,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install test dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install mlflow pytest requests
           pip install -r requirements-test.txt
-
-      - name: Wait for MLflow to be ready
+      - name: Run unit and API tests
         run: |
-          for i in {1..20}; do
-            if curl -sSf http://mlflow:8080/health; then
-              echo "MLflow is ready"
-              exit 0
-            fi
-            echo "Waiting for MLflow..."
-            sleep 5
-          done
-          echo "MLflow not ready in time"
-          exit 1
-
-      - name: Run integration tests
-        env:
-          MLFLOW_TRACKING_URI: http://mlflow:8080
-        run: pytest tests/ -v
-
+          pytest tests/ -v
