@@ -35,6 +35,8 @@ jobs:
           pip install -r requirements-test.txt
 
       - name: Run unit and API tests
+        env:
+          MLFLOW_TRACKING_URI: http://mlflow:8080
         run: |
           pytest tests/ -v
 
@@ -95,15 +97,18 @@ jobs:
       - name: Wait for MLflow to be ready
         run: |
           for i in {1..20}; do
-            if curl -sSf http://localhost:8080/health; then
+            if curl -sSf http://mlflow:8080/health; then
               echo "MLflow is ready"
               exit 0
             fi
+            echo "Waiting for MLflow..."
             sleep 5
           done
           echo "MLflow not ready in time"
           exit 1
 
       - name: Run integration tests
+        env:
+          MLFLOW_TRACKING_URI: http://mlflow:8080
         run: pytest tests/ -v
 
