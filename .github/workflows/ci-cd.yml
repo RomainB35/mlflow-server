@@ -89,32 +89,21 @@ jobs:
       - name: Install test dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest requests mlflow
+          pip install mlflow pytest requests
           pip install -r requirements-test.txt
 
       - name: Wait for MLflow to be ready
         run: |
-          echo "Waiting for MLflow service to be ready..."
           for i in {1..20}; do
-            if curl -sSf http://localhost:8080/health > /dev/null; then
-              echo "✅ MLflow is ready!"
+            if curl -sSf http://localhost:8080/health; then
+              echo "MLflow is ready"
               exit 0
-            else
-              echo "⏳ Not ready yet ($i)..."
-              sleep 5
             fi
+            sleep 5
           done
-          echo "❌ MLflow did not become ready in time."
+          echo "MLflow not ready in time"
           exit 1
 
       - name: Run integration tests
-        run: |
-          pytest tests/ -v
-
-      - name: Debug: List running containers
-        run: docker ps -a
-
-      - name: Debug: Show container logs
-        run: |
-          docker logs $(docker ps -q --filter "ancestor=docker.io/romainb35/mlflow-server:latest") || true
+        run: pytest tests/ -v
 
