@@ -79,7 +79,19 @@ jobs:
           - 8080:8080
 
     steps:
-      - name: Test health of deployed Docker image
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
         run: |
-          pytest tests/ -v
+          python -m pip install --upgrade pip
+          pip install pytest requests
+          pip install -r requirements-test.txt
+
+      - name: Run tests
+        run: pytest tests/ -v
 
