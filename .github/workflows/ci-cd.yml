@@ -79,19 +79,40 @@ jobs:
           - 8080:8080
 
     steps:
-      - uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
+      - name: Install test dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest requests
+          pip install pytest requests mlflow
           pip install -r requirements-test.txt
 
-      - name: Run tests
-        run: pytest tests/ -v
+      - name: Wait for MLflow to be ready
+        run: |
+          echo "Waiting for MLflow service to be ready..."
+          for i in {1..20}; do
+            if curl -sSf http://localhost:8080/health > /dev/null; then
+              echo "✅ MLflow is ready!"
+              exit 0
+            else
+              echo "⏳ Not ready yet ($i)..."
+              sleep 5
+            fi
+          done
+          echo "❌ MLflow did not become ready in time."
+          exit 1
+
+      - name: Run integration tests
+        run: |
+          pytest tests/ -v
+
+      - name: Debug: List running containers
+        run: docker ps -a
+
+      - name: Debug: Show container logs
+        run: |
+          docker logs $(docker ps -q --filter "ancestor=docker.io/romainb35/mlflow-server:latest") || true
 
