@@ -84,7 +84,7 @@ jobs:
 
     services:
       mlflow:
-        image: ${{ env.REGISTRY }}/${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+        image: docker.io/romainb35/mlflow-server:latest
         ports:
           - 8080:8080
         options: >-
